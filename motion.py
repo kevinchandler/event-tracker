@@ -1,6 +1,12 @@
 import datetime
-from dateutil import parser
 import time
+from dateutil import parser
+import RPi.GPIO as GPIO
+
+GPIO_CHANNEL = 18
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setwarnings(True)
 
 # Logging
 def log_event():
@@ -36,15 +42,16 @@ def should_log_event():
 def motion_detected():
     if should_log_event():
         log_event()
-        print 'sleeping for 2 minutes'
-        time.sleep(120)
+        print 'Sleeping for 90'
+        time.sleep(90)
 
 def detect_motion():
     while True:
-        # TODO: Implement GPIO
-        gpio = 1
-        if gpio == 1:
+        input_state = GPIO.input(GPIO_CHANNEL)
+        if input_state == True:
+            print 'Motion detected'
             motion_detected()
+
 
 
 detect_motion()
